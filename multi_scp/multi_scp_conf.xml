@@ -1,0 +1,49 @@
+<route>
+    <to_server_2 1 > 2 />
+    <to_server_3 1 > 2 > 3 />
+    <to_server_4 1 > 2 > 3 > 4 />
+    <to_server_5 1 > 2 > 3 > 4 > 5 />
+    <to_server_6 1 > 2 > 3 > 4 > 6 />
+</route>
+<common>
+    <command>transfer_file</command>
+    <dir>/tmp</dir>
+</common>
+<server_info>
+    <server.1 item="local server">
+        <username>root</username>
+        <IP>192.168.0.1</IP>
+        <passwd>123456</passwd>
+        <hostname>local</hostname>
+    </server.1>
+    <server.2 item="server 1">
+        <username>root</username>
+        <IP>192.168.1.1</IP>
+        <passwd>123456</passwd>
+        <hostname>server1</hostname>
+    </server.2>
+    <server.3 item="server 2">
+        <username>root</username>
+        <IP>192.168.2.1</IP>
+        <passwd>123456</passwd>
+        <hostname>server2</hostname>
+    </server.3>
+    <server.4 item="server 3">
+        <username>root</username>
+        <IP>192.168.3.1</IP>
+        <passwd>123456</passwd>
+        <hostname>server3</hostname>
+    </server.4>
+    <server.5 item="server 4">
+        <username>root</username>
+        <IP>192.168.4.1</IP>
+        <passwd>123456</passwd>
+        <hostname>server4</hostname>
+    </server.5>
+    <server.6 item="server 5">
+        <username>root</username>
+        <IP>192.168.5.1</IP>
+        <passwd>123456</passwd>
+        <hostname>server5</hostname>
+    </server.6>
+</server_info>
