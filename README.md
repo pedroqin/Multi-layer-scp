@@ -182,6 +182,7 @@ install.sh  install_multi_scp.run  multi_scp  multi_scp.tgz
 需要在本地及中转机执行以下操作
 1. 安装expect和tcl：由于本功能基于expect实现，tcl是expect的依赖，故需要安装expect和tcl
 2. 执行安装文件`install_multi_scp.run`
+3. 更新配置文件`/etc/multi_scp_conf.xml`
 
 ### 实现效果
 1. 将本地`/root/StorageStressTest.pyc`文件传输到远端（故方式为`send`）服务器（id为5）上，命令：`multi_scp -t 5 -m s -f /root/StorageStressTest.pyc`。   
