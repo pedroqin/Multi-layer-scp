@@ -13,13 +13,14 @@ set script_name     $argv0
 set send_receive    [lindex $argv 0]
 set dir_name        [lindex $argv 1]
 set file_name       [lindex $argv 2]
-set server_offset   [lindex $argv 3]
-set server_id       [lindex $argv 4]
-set username        [lindex $argv 5]
-set host            [lindex $argv 6]
-set passwd          [lindex $argv 7]
-set hostname        [lindex $argv 8]
-set remain_argv     [lrange $argv 9 999]
+set target_path     [lindex $argv 3]
+set server_offset   [lindex $argv 4]
+set server_id       [lindex $argv 5]
+set username        [lindex $argv 6]
+set host            [lindex $argv 7]
+set passwd          [lindex $argv 8]
+set hostname        [lindex $argv 9]
+set remain_argv     [lrange $argv 10 999]
 
 set basename        [lindex [split "$file_name" "/"] end]
 set server_offset   [expr $server_offset + 1]
@@ -44,13 +45,13 @@ if {$send_receive=="send"} {
         expect {
             "yes/no"                { send "yes\n"; exp_continue}
             "$host's password:"     { send "$passwd\n" ; exp_continue}
-            "$hostname*#"           { send "$script_name $send_receive $dir_name $file_name $server_offset $remain_argv && wait && sync && exit\n" ; exp_continue}
+            "$hostname*#"           { send "$script_name $send_receive $dir_name $file_name $target_path $server_offset $remain_argv && wait && sync && exit\n" ; exp_continue}
         }
         
     } else {
 
         send_user "$server_offset. scp to $server_id $host ##**==++==**## ==> "
-        spawn scp -r $dir_name/$basename $username@$host:$dir_name/
+        spawn scp -r $dir_name/$basename $username@$host:$target_path/
         expect {
             "yes/no"                { send "yes\n"; exp_continue}
             "password:"             { send "$passwd\n" ; exp_continue}
@@ -67,7 +68,7 @@ if {$send_receive=="send"} {
         expect {
             "yes/no"                { send "yes\n"; exp_continue}
             "$host's password:"     { send "$passwd\n" ; exp_continue}
-            "$hostname*#"           { send "$script_name $send_receive $dir_name $file_name $server_offset $remain_argv && wait && sync && exit\n" ; exp_continue}
+            "$hostname*#"           { send "$script_name $send_receive $dir_name $file_name $target_path $server_offset $remain_argv && wait && sync && exit\n" ; exp_continue}
         }
         
         send_user "$server_offset. scp from $server_id $host ##**==++==**## ==> "
@@ -78,7 +79,7 @@ if {$send_receive=="send"} {
         }
     } else {
         send_user "$server_offset. scp from $server_id $host ##**==++==**## ==> "
-        spawn scp -r $username@$host:$file_name $dir_name/
+        spawn scp -r $username@$host:$file_name $target_path/
         expect {
             "yes/no"                { send "yes\n"; exp_continue}
             "password:"             { send "$passwd\n" ; exp_continue}

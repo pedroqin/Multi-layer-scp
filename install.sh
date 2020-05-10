@@ -6,8 +6,8 @@
 # Version     :   1.0.0
 ###############################################
 
-Lines=66
-MD5="1a9ac23cfcd9ba741a5d4a43329e36e8"
+Lines="67"
+MD5="2a3ff57f81aeb651f91d0635dfbf8546"
 # show message in green
 function green_message()
 {
@@ -54,12 +54,13 @@ if [ "$md5_cur" != "$MD5" ];then
 else
     green_message "md5sum check pass"
 fi
-print_run "tar -xf /tmp/multi_scp.tgz -C /tmp"
-print_run "cp /tmp/multi_scp/transfer_file.sh /usr/bin/transfer_file"   || install_fail
-print_run "(cd /usr/bin; chmod +x transfer_file)"
-print_run "cp /tmp/multi_scp/multi_scp.sh /usr/bin/multi_scp"           || install_fail
-print_run "(cd /usr/bin; chmod +x multi_scp)"
-print_run "cp /tmp/multi_scp/multi_scp_conf.xml /etc"                   || install_fail
-print_run "rm -rf /tmp/multi_scp*"
+temp_dir=`mktemp -d /tmp/multi_scp_XXXXXXXX`
+print_run "tar -xf /tmp/multi_scp.tgz -C $temp_dir"
+print_run "cp $temp_dir/multi_scp/transfer_file.sh /usr/bin/transfer_file"   || install_fail
+print_run "chmod +x /usr/bin/transfer_file"
+print_run "cp $temp_dir/multi_scp/multi_scp.sh /usr/bin/multi_scp"           || install_fail
+print_run "(chmod +x /usr/bin/multi_scp)"
+print_run "cp $temp_dir/multi_scp/multi_scp_conf.xml /etc"                   || install_fail
+print_run "rm -rf ${temp_dir:-/tmp/multi_scp*/};rm /tmp/multi_scp.tgz"
 echo Done
 exit
