@@ -262,6 +262,10 @@ while [ -n $1 ] ;do
 
         -l | --list)
         shift
+        if [ ! -s "$config_file" ] ;then
+            red_message "Can't find the config file $config_file!"
+            usage
+        fi
         list_content
         ;;
 
