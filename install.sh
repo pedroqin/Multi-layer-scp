@@ -6,8 +6,8 @@
 # Version     :   1.0.0
 ###############################################
 
-Lines="67"
-MD5="2a3ff57f81aeb651f91d0635dfbf8546"
+Lines="105"
+MD5="da568c283f1629dbcee674f1580042f5"
 # show message in green
 function green_message()
 {
@@ -43,7 +43,38 @@ function print_run()
 function install_fail()
 {
     red_message "install fail"
+    print_run "rm -rf ${temp_dir:-/tmp/multi_scp*/};rm /tmp/multi_scp.tgz"
     exit 255
+}
+
+# Evaluate shvar-style booleans
+function boolean()
+{
+    case "$1" in
+        [tT] | [yY] | [yY][eE][sS] | [tT][rR][uU][eE])
+        return 0
+        ;;
+        [fF] | [nN] | [nN][oO] | [fF][aA][lL][sS][eE])
+        return 1
+        ;;
+    esac
+    return 255
+}
+
+function confirm ()
+{
+    local ans=""
+    local -i ret=0
+
+    while [ -z "$ans" ]; do
+        read -p "$1" ans
+        boolean $ans
+        ret=$?
+        [ $ret -eq 255 ] && ans=""
+    done
+    echo "$ans"
+    
+    return $ret
 }
 
 cat $0 |tail -n +$Lines > /tmp/multi_scp.tgz
@@ -55,12 +86,19 @@ else
     green_message "md5sum check pass"
 fi
 temp_dir=`mktemp -d /tmp/multi_scp_XXXXXXXX`
-print_run "tar -xf /tmp/multi_scp.tgz -C $temp_dir"
+print_run "tar -xf /tmp/multi_scp.tgz -C $temp_dir 2>/dev/null"
 print_run "cp $temp_dir/multi_scp/transfer_file.sh /usr/bin/transfer_file"   || install_fail
 print_run "chmod +x /usr/bin/transfer_file"
 print_run "cp $temp_dir/multi_scp/multi_scp.sh /usr/bin/multi_scp"           || install_fail
 print_run "(chmod +x /usr/bin/multi_scp)"
-print_run "cp $temp_dir/multi_scp/multi_scp_conf.xml /etc"                   || install_fail
+if [ -f /etc/multi_scp_conf.xml ];then
+    confirm "Overwrite the original /etc/multi_scp_conf.xml [Y|N]? "
+    if [ $? -eq 0 ];then
+        print_run "cp $temp_dir/multi_scp/multi_scp_conf.xml /etc"           || install_fail
+    fi
+else
+    print_run "cp $temp_dir/multi_scp/multi_scp_conf.xml /etc"               || install_fail
+fi
 print_run "rm -rf ${temp_dir:-/tmp/multi_scp*/};rm /tmp/multi_scp.tgz"
 echo Done
 exit

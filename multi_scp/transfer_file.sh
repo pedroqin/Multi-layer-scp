@@ -72,14 +72,19 @@ if {$send_receive=="send"} {
         }
         
         send_user "$server_offset. scp from $server_id $host ##**==++==**## ==> "
+        # if $server_offset equal 1, mean we are in first server , we can use the target_path
+        if {$server_offset=="1"} {
+        spawn scp -r $username@$host:$dir_name/$basename $target_path/
+        } else {
         spawn scp -r $username@$host:$dir_name/$basename $dir_name/
+        }
         expect {
             "yes/no"                { send "yes\n"; exp_continue}
             "$host's password:"     { send "$passwd\n" ; exp_continue}
         }
     } else {
         send_user "$server_offset. scp from $server_id $host ##**==++==**## ==> "
-        spawn scp -r $username@$host:$file_name $target_path/
+        spawn scp -r $username@$host:$file_name $dir_name/
         expect {
             "yes/no"                { send "yes\n"; exp_continue}
             "password:"             { send "$passwd\n" ; exp_continue}

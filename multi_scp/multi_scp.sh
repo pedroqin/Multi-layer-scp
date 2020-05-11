@@ -135,7 +135,7 @@ function list_content()
         green_message "    ${i%=*} : ${i##*=}"
     done
 
-    servers=`grep -Eo "server\.[0-9]+" $config_file | sort -u`
+    servers=`grep -Eo "server\.[0-9]+" $config_file | uniq`
     green_message "server info:"
     for server in $servers ;do
         content=`xml_parse $server $config_file |tr '\n' ' '`
